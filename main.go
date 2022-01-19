@@ -20,6 +20,9 @@ func init() {
 	port = flag.Int("port", 3000, "port number")
 }
 
+func runCmd() {
+
+}
 func main() {
 	flag.Parse()
 
@@ -40,7 +43,6 @@ func main() {
 		val = splits[1]
 		return
 	})
-	fmt.Println(environment["PATH"])
 	getEnv := func(key string) {
 		val, ok := os.LookupEnv(key)
 		if !ok {
@@ -60,7 +62,8 @@ func main() {
 	fmt.Println(os.ExpandEnv("$NAME lives in ${BURROW}."))
 	fmt.Println("Hello World")
 
-	cmd := exec.Command("mvn", "-version")
+	//cmd := exec.Command("mvn", "-version")
+	cmd := exec.Command("/bin/bash", "-s", "export PATH=abc")
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout // 标准输出
 	cmd.Stderr = &stderr // 标准错误
@@ -71,4 +74,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
+	fmt.Println(environment["PATH"])
+
 }
