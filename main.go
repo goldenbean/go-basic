@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -38,4 +41,34 @@ func main() {
 		return
 	})
 	fmt.Println(environment["PATH"])
+	getEnv := func(key string) {
+		val, ok := os.LookupEnv(key)
+		if !ok {
+			fmt.Printf("%s not set\n", key)
+		} else {
+			fmt.Printf("%s=%s\n", key, val)
+		}
+	}
+
+	getEnv("EDITOR")
+	getEnv("SHELL")
+	fmt.Println("Hello World")
+
+	os.Setenv("NAME", "gopher")
+	os.Setenv("BURROW", "/usr/gopher")
+
+	fmt.Println(os.ExpandEnv("$NAME lives in ${BURROW}."))
+	fmt.Println("Hello World")
+
+	cmd := exec.Command("mvn", "-version")
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout // 标准输出
+	cmd.Stderr = &stderr // 标准错误
+	err := cmd.Run()
+	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
+	fmt.Printf("out:\n%s\nerr:\n%s\n", outStr, errStr)
+
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
 }
